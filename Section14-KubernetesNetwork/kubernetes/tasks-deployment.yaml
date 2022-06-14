@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tasks-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tasks
+  template:
+    metadata:
+      labels:
+        app: tasks
+    spec:
+      containers:
+        - name: tasks
+          image: vdocker2603/kub-demo-tasks:latest
+          env:
+            - name: AUTH_ADDRESS
+              #value: "10.103.179.72"
+              value: "auth-service.default"
+            - name: TASKS_FOLDER
+              value: task
+          volumeMounts:
+            - mountPath: /app/task
+              name: task-volume
+      volumes:
+        - name: task-volume
+          emptyDir: {}
+          #persistentVolumeClaim:
+          #  claimName: tasks-pvc
